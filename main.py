@@ -43,10 +43,9 @@ class MainWindow(QMainWindow):
         parser = ASTParser(self.memory)
         input_text = self.input_text.toPlainText()
         result = parser.parse(lexer.tokenize(input_text))
-        # print(result)
+        # print(self.memory)
         if result:
             for stmt in result:
-                # print(stmt)
                 stmt.run(self.memory)
                 # print(self.memory)
         else:

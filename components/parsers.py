@@ -36,13 +36,16 @@ class ASTParser(Parser):
     def statements(self, p):
         return [p.statement]
     
-    @_('statement')
-    def statements(self, p):
-        return [p.statement]
 
     @_('PRINT "(" expr ")"')
     def statement(self, p):
         return PrintStatement(p.expr)
+    
+    
+    @_('NAME "=" expr')
+    def statement(self, p):
+        # self.memory.set(p.NAME, p.expr.evaluate(self.memory))
+        return AssignmentStatement(p.NAME, p.expr)
 
     @_('IF "(" expr ")" "{" statements "}" ELSE "{" statements "}"')
     def statement(self, p):
@@ -56,6 +59,11 @@ class ASTParser(Parser):
     def statement(self, p):
         return WhileStatement(p.expr, CompoundStatement(p.statements))
 
+    # Extend the grammar to handle string literals in expressions
+    @_('STRING')
+    def expr(self, p):
+        return Expression_string(p.STRING)
+        
     # Arithmetic Expressions
     @_('expr "+" expr')
     def expr(self, p):
@@ -93,11 +101,6 @@ class ASTParser(Parser):
     @_('NUMBER')
     def expr(self, p) -> Expression:
         return Expression_number(number=p.NUMBER)
-    
-    @_('NAME "=" expr')
-    def statement(self, p):
-        # self.memory.set(p.NAME, p.expr.evaluate(self.memory))
-        return AssignmentStatement(p.NAME, p.expr)
 
     @_('expr')
     def expr(self, p):

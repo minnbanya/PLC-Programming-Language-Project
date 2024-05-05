@@ -79,6 +79,14 @@ class Expression(ABC):
     def evaluate(self, context):
         pass
 
+class Expression_string(Expression):
+    def __init__(self, value):
+        self.value = value
+
+    def evaluate(self, context):
+        return self.value
+
+
 class Expression_number(Expression):
     def __init__(self, number):
         self.number = number  # This can be a direct value or a callable

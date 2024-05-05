@@ -15,7 +15,7 @@ class MyLexer(Lexer):
     # set `tokens` so it can be used in the parser.
     # This must be here and all Capitalized. 
     # Please, ignore IDE warning.
-    tokens = {NAME, NUMBER, BOOLEAN, EQUALS, NOTEQUALS, IF, ELSE, WHILE, PRINT, LESS, GREATER}
+    tokens = {NAME, NUMBER, BOOLEAN, EQUALS, NOTEQUALS, IF, ELSE, WHILE, PRINT, LESS, GREATER, STRING}
     
     # https://sly.readthedocs.io/en/latest/sly.html#literal-characters
     literals = { '+', '-', '*', '/', '=', '(', ')', '{', '}', ';'}
@@ -32,6 +32,13 @@ class MyLexer(Lexer):
     ### matching rule ###
     # The matching work from top to bottom
     # At least, all toekns must be defined here
+
+    # Regular expression for string literals
+    @_(r'\"[^"]*\"')  # Matches double quoted strings
+    def STRING(self, token):
+        token.value = token.value[1:-1]  # Strip the quotes
+        return token
+    
     # Boolean pattern
     @_(r'true|false')
     def BOOLEAN(self, token):
