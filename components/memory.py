@@ -26,7 +26,7 @@ class Memory:
 
     def get(self, variable_name: str):
         data = self.memory[variable_name]
-        return data['value']  # Return the actual value
+        return data  # Return the actual value
 
 
     def __repr__(self) -> str:

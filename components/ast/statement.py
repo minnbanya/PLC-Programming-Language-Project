@@ -12,7 +12,10 @@ class PrintStatement(Statement):
 
     def run(self, context):
         value = self.expression.evaluate(context)
-        print(value)
+        if str(value).lower() == 'true' or str(value).lower() == 'false' :
+            print(str(value).lower())
+        else:
+            print(value)
 
 class IfStatement(Statement):
     def __init__(self, condition, true_block, false_block=None):
@@ -100,6 +103,7 @@ class Expression_number(Expression):
 class Expression_boolean(Expression):
     def __init__(self, value):
         self.value = value
+        # self.bool = str(value).lower()
 
     def evaluate(self, context):
         return self.value
@@ -113,6 +117,10 @@ class Expression_math(Expression):
     def evaluate(self, context):
         val1 = self.parameter1.evaluate(context)
         val2 = self.parameter2.evaluate(context)
+        if type(val1) == bool and type(val2) == bool and self.operation != Operations.EQUALS and self.operation != Operations.NOTEQUALS:
+            raise ValueError(f"Type error {self.operation} between two booleans.")
+        if type(val1) != type(val2):
+            raise ValueError(f"Type mismatch between {val1} {type(val1)} and {val2} {type(val2)}")
         if self.operation == Operations.PLUS:
             return val1 + val2
         elif self.operation == Operations.MINUS:
@@ -156,7 +164,7 @@ class VariableExpression(Expression):
 
     def evaluate(self, context):
         try:
-            return context.get(self.name)
+            return context.get(self.name)['value']
         except KeyError:
             raise Exception(f"Variable '{self.name}' not defined")
 

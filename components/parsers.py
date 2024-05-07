@@ -107,10 +107,14 @@ class ASTParser(Parser):
         if isinstance(p.expr0, Expression_number):
             return p.expr0
         elif isinstance(p.expr0, str):  # Handling variable names
-            value = self.memory.get(p.expr0)
+            value = self.memory.get(p.expr0)['value']
             if value is None:
                 raise Exception(f"Variable '{p.expr0}' not defined")
             return Expression_number(value)
+        
+    @_('"(" expr ")"')
+    def expr(self, p):
+        return p[1]
 
     
     @_('NAME')
